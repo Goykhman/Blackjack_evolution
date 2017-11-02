@@ -1,0 +1,36 @@
+* Deck.h contains the Deck class for a single deck of cards, which can be shuffled, and which has the card dealing functionality.
+
+* create_strategy_chromosome.cpp contains the code which allows to create the strategy_chromosome.csv file with the vector of length 800, serving as a strategy chromosome (currently written to create the Thorp’s basic strategy chromosome). This vector can then be decoded in the Chromosome.h, as the core of the basic strategy decision making functions. It also outputs the strategy into the console, so that one can check it is consistent with what one intended it to be. For the purpose of the evolution we need the strategy chromosome file strategy_chromosome.csv if we want to run an evolution starting from the population with the strategies being initialized to the desired values.
+
+* Chromosome.h encodes the strategy chromosome and interface to it. It has two constructors, the default construct, which initializes the chromosome randomly, with each of its genes assigned 1/0 with 50/50 probability. The other constructor takes the vector as an argument, and that vector is used to assign values to the chromosome.
+
+* Game.h inherits the Deck and the Chromosome, and contains functionality to play against the dealer. It uses the strategy prescribed in the Chromosome, and it uses the Deck to deal the cards.
+
+* Evolve.cpp evolves the population of Game classes. It has two constructors, corresponding to the situations when we use one of the two constructors of the Game class, depending on whether we want to initialize each Game’s Chromosome randomly, or to the specific values. It outputs the evolved mean strategy to the console in the form of de-serialized matrices, and saves it to chrom_basic.csv as one serialized vector. It also prints the list of the fit scores sequences for each step of evolution in the file scores.csv, and it outputs these fit scores to console in real time so that one can track the evolution progress. Currently Evolve.cpp calls evolution on the population which has been initialized to some specified chromosome. Calling a different constructor on the Evolve class in the main function of the Evolve.cpp can initialize the population randomly.
+
+* produce_plots.py creates fit scores time series plot from the scores.csv file created by the run of Evolve. It also prints to console the de-serialized version of the evolved mean strategy which it reads from chrom_basic.csv.
+
+* create_evolved_csv.py reads the average evolved strategy chromosome from the chrom.csv file (produced by Evolve) and makes a chromosome from it, by setting genes to be 1 when the corresponding mean gene is larger than or equal to some parameter “a”, the latter is specified in the create_evolved_csv.py. The resulting chromosome is outputted to console in de-serialized format, and is saved in the file chrom_evolved.csv. This file can then be used in the Test_strategy module (remember to ensure the correct name which the BasicStrategy.h in the Test_strategy module reads).
+
+* Quicksort.h is home-made quick sort module, designed to sort a two-dimensional array with M rows and 2 columns by the value of the second column, using the quicksort algorithm.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The module Evolve_strategy can be operated as follows:
+
+1. If we want to initialize the population of games to the given strategy, then write that strategy in the create_strategy_chromosome.cpp, compile, and execute. This will produce the corresponding file strategy_chromosome.csv with the chromosome encoding the desired strategy. If we want to initialize the population of games randomly, go to step 1*.
+
+1*. In order to initialize the population randomly, make sure to replace the constructor call
+
+Evolve ev1(player_bankroll,dealer_bankroll,bet,propagation_rate,selection_rate,size_of_population,play_rounds,prob);
+
+in Evolve.cpp with the constructor call
+
+Evolve ev1(player_bankroll,dealer_bankroll,bet,propagation_rate,selection_rate,size_of_population,play_rounds);
+
+2. Run and execute Evolve.cpp. Now the number of generations is set to 5, change it to the desirable number (search for the “evolve_generations” variable in the main function). Evolved strategy chromosome will be saved in the chrom.csv file, and the evolutionary time dependence of the fit scores will be saved in the scores.csv file. The scores will be output to console during the course of evolution, so that one can keep track of its progress. At the end of evolution the averaged mean strategy will also be output to console.
+
+3. Run produce_plots.py. This will create the plot of the evolutionary time dependence of the fit scores (in that dependence the score will be a combination of fluctuations and a possible evolutionary trend). It will also print the average fit strategy to the console.
+
+4. Run create_evolved_csv.py. This will create strategy_chromosome.csv file with the evolved strategy. This strategy is made from the average strategy which it reads from chrom.csv. The average gene which is higher than or equal to the set value “a” is set to 1, otherwise it is set to 0. Change the value of “a” to desired value in create_evolved_scv.py. The strategy_chromosome.csv can be taken to Test_module and tested, see instructions there.
+
