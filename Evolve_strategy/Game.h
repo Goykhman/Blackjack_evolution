@@ -484,11 +484,11 @@ void Game::split_round(const char & player_rank){
     // Player's decisions.
     // Double down. Can't double down on split aces. Therefore the soft hand
     // is considered for double down only if we split non-aces and receive an ace.
-    if(player_hand[0]!='A'&&(player_soft&&if_soft_double_down(player_hand[0],
+    if(player_count!=21&&player_hand[0]!='A'&&(player_soft&&if_soft_double_down(player_hand[0],
                                                   dealer_hand[0])==1)){
         player_doubled_down=true;
     }
-    else if(player_hand[0]!='A'&&!player_soft&&
+    else if(player_count!=21&&player_hand[0]!='A'&&!player_soft&&
             (if_hard_double_down(player_hand,dealer_hand[0])==1)){
         player_doubled_down=true;
     }
